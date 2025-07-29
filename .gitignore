@@ -1,0 +1,89 @@
+# Browser Automation Project .gitignore
+
+# Environment and API Keys
+.env
+.env.*
+*.env
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environments
+venv/
+env/
+ENV/
+.venv
+.ENV
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Playwright browsers and cache
+.playwright/
+playwright-downloads/
+browser-use_agent_*/
+
+# Browser automation results and logs
+results/
+logs/
+screenshots/
+recordings/
+*.gif
+*.mp4
+*.webm
+
+# Browser profiles and cache
+browseruse/
+.config/browseruse/
+browser_profiles/
+user_data_dir/
+
+# Temporary files
+*.tmp
+*.temp
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+
+# Documentation builds
+docs/_build/
+
+# MacOS
+.DS_Store
+.AppleDouble
+.LSOverride 

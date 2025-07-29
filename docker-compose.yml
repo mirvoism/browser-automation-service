@@ -1,0 +1,74 @@
+version: '3.8'
+
+services:
+  # Google Gemini Version
+  browser-automation-gemini:
+    build: .
+    container_name: ai-browser-gemini
+    environment:
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      - DISPLAY=:99
+    volumes:
+      - ./results:/app/results
+      - ./screenshots:/app/screenshots
+    command: python examples/google_search.py
+    restart: unless-stopped
+    networks:
+      - automation-network
+
+  # Mac Studio Version  
+  browser-automation-macstudio:
+    build: .
+    container_name: ai-browser-macstudio
+    environment:
+      - OPENAI_API_BASE=https://matiass-mac-studio.tail174e9b.ts.net/v1
+      - OPENAI_API_KEY=ollama
+      - DISPLAY=:99
+    volumes:
+      - ./results:/app/results
+      - ./screenshots:/app/screenshots
+    command: python examples/google_search_macstudio.py
+    restart: unless-stopped
+    networks:
+      - automation-network
+
+  # Production Visual Agent
+  production-agent:
+    build: .
+    container_name: ai-browser-production
+    environment:
+      - OPENAI_API_BASE=https://matiass-mac-studio.tail174e9b.ts.net/v1
+      - OPENAI_API_KEY=ollama
+      - DISPLAY=:99
+    volumes:
+      - ./results:/app/results
+      - ./screenshots:/app/screenshots
+      - ./browser-profiles:/app/browser-profiles
+    command: python production_visual_agent.py
+    restart: unless-stopped
+    networks:
+      - automation-network
+
+  # Development Environment
+  dev-environment:
+    build: .
+    container_name: ai-browser-dev
+    environment:
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      - OPENAI_API_BASE=https://matiass-mac-studio.tail174e9b.ts.net/v1
+      - OPENAI_API_KEY=ollama
+    volumes:
+      - .:/app
+      - ./results:/app/results
+    command: tail -f /dev/null  # Keep container running for development
+    networks:
+      - automation-network
+
+networks:
+  automation-network:
+    driver: bridge
+
+volumes:
+  browser-profiles:
+  screenshots:
+  results:
