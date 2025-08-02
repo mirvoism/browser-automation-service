@@ -10,6 +10,7 @@ RUN apt-get update && apt-get install -y \
     wget \
     unzip \
     xvfb \
+    net-tools \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy requirements first for better caching
@@ -18,6 +19,7 @@ COPY requirements*.txt ./
 # Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 RUN pip install --no-cache-dir -r requirements-macstudio.txt
+RUN pip install --no-cache-dir -r requirements-service.txt
 
 # Install Playwright browsers
 RUN playwright install --with-deps chromium
@@ -34,9 +36,12 @@ USER automation
 ENV PYTHONPATH=/app
 ENV PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD python -c "import browser_use; print('OK')" || exit 1
+# Expose service port
+EXPOSE 8000
 
-# Default command
-CMD ["python", "examples/google_search.py"]
+# Health check for service
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:8000/api/health || exit 1
+
+# Default command - run the service
+CMD ["python", "main.py"]

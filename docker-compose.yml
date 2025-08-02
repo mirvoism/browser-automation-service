@@ -1,6 +1,38 @@
 version: '3.8'
 
 services:
+  # Browser Automation API Service
+  browser-automation-service:
+    build: .
+    container_name: browser-automation-api
+    ports:
+      - "8000:8000"  # API service port
+    environment:
+      - HOST=0.0.0.0
+      - PORT=8000
+      - DEFAULT_LLM_PROVIDER=mac_studio
+      - DEFAULT_LLM_MODEL=llama4:scout
+      - MAC_STUDIO_URL=https://matiass-mac-studio.tail174e9b.ts.net/v1
+      - DEFAULT_BROWSER_PROFILE=anti_bot
+      - MAX_CONCURRENT_TASKS=3
+      - LOG_LEVEL=info
+      - ENABLE_CORS=true
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY:-}
+    volumes:
+      - ./results:/app/results
+      - ./screenshots:/app/screenshots
+      - ./logs:/app/logs
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+    networks:
+      - automation-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
   # Google Gemini Version
   browser-automation-gemini:
     build: .
